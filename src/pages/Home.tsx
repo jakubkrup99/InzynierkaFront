@@ -11,7 +11,9 @@ function HomePage() {
         Describe your photos with AI
       </p>
       <div className="flex flex-col gap-3 w-56 mx-auto items-center justify-center">
-        <Button color="blue">Create account</Button>
+        <Link to="/register">
+          <Button color="blue">Create account</Button>
+        </Link>
         <Link to="/login">
           <Button color="gray">Sign in</Button>
         </Link>
