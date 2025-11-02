@@ -21,7 +21,7 @@ function LoginPage() {
       <div className="w-full md:w-2/3 flex items-center justify-start md:border-l-1 border-gray-600 p-8">
         <div className="text-left w-full p-3 max-w-3xl">
           <h1 className="text-xl my-3 ">Sign in</h1>
-          <Form>
+          <form>
             <Input Icon={CiAt} name="email" placeholder="Email Address" />
             <Input Icon={CiLock} name="password" placeholder="Password" />
             {errors.length > 0 &&
@@ -36,7 +36,7 @@ function LoginPage() {
                 Next
               </Button>
             </div>
-          </Form>
+          </form>
         </div>
       </div>
     </div>
