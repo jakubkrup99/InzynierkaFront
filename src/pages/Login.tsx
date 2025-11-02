@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { CiAt } from "react-icons/ci";
 import { CiLock } from "react-icons/ci";
 import Button from "../components/Button";
@@ -11,18 +11,25 @@ import { loginUser } from "../client/authorization";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (registerData: LoginRequest) => loginUser(registerData),
     onError: (err: any) => setError(err.message),
   });
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const loginData = {
       email: formData.get("email")!.toString(),
       password: formData.get("password")!.toString(),
     };
-    mutation.mutate(loginData);
+    const response = await mutation.mutateAsync(loginData);
+    localStorage.setItem("token", response.accessToken);
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 1);
+    localStorage.setItem("expiration", expirationDate.toISOString());
+    console.log("why not redirect");
+    navigate("/main");
   }
   return (
     <div className="w-full min-h-screen flex mx-2">
