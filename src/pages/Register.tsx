@@ -5,19 +5,19 @@ import { useState } from "react";
 import ValidationError from "../components/ValidationError";
 import { validateEmail } from "../Utils/validationUtil";
 import Input from "../components/Input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../client/authorization";
 import type RegisterRequest from "../types/API/RegisterRequest";
 
 function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (registerData: RegisterRequest) => registerUser(registerData),
+    onError: (err: any) => setError(err.message),
   });
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault;
+    e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const registerData = {
       email: formData.get("email"),
@@ -29,6 +29,16 @@ function RegisterPage() {
       setError(validateEmailResult.message);
       return;
     }
+    if (registerData.password !== registerData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    mutation.mutate({
+      email: registerData.email!.toString(),
+      password: registerData.password!.toString(),
+    });
+
     setError(null);
   }
   return (
@@ -47,12 +57,23 @@ function RegisterPage() {
         <div className="text-left w-full p-3 max-w-3xl">
           <h1 className="text-xl my-3 ">Register</h1>
           <form onSubmit={handleSubmit}>
-            <Input Icon={CiAt} name="email" placeholder="Email Address" />
-            <Input Icon={CiLock} name="password" placeholder="Password" />
+            <Input
+              Icon={CiAt}
+              name="email"
+              placeholder="Email Address"
+              type="email"
+            />
+            <Input
+              Icon={CiLock}
+              name="password"
+              placeholder="Password"
+              type="password"
+            />
             <Input
               Icon={CiLock}
               name="confirm-password"
               placeholder="Confirm password"
+              type="password"
             />
             {error && <ValidationError text={error} />}
             <div className="flex my-4 justify-between">
@@ -61,8 +82,8 @@ function RegisterPage() {
                   Back
                 </Button>
               </Link>
-              <Button color="blue" width={24}>
-                Next
+              <Button color="blue" width={24} disabled={mutation.isPending}>
+                {mutation.isPending ? "Submitting..." : "Register"}
               </Button>
             </div>
           </form>

@@ -4,9 +4,10 @@ type InputProps = {
   Icon: IconType;
   name: string;
   placeholder?: string;
+  type: string;
 };
 
-function Input({ Icon, name, placeholder }: InputProps) {
+function Input({ Icon, name, placeholder, type }: InputProps) {
   return (
     <label
       htmlFor={name}
@@ -14,11 +15,12 @@ function Input({ Icon, name, placeholder }: InputProps) {
     >
       <Icon size={20} />
       <input
-        className="flex-1 bg-transparent outline-none"
+        className="flex-1 bg-transparent outline-none autofill:bg-transparent autofill:dark:bg-transparent"
         id={name}
-        type={name}
+        type={type}
         name={name}
         placeholder={placeholder ?? ""}
+        autoComplete="off"
         required
       />
     </label>
