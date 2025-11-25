@@ -31,6 +31,7 @@ export async function loginUser(loginData: LoginRequest) {
     },
   });
   const data = await response.json();
+  console.log(data);
   if (!response.ok) {
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]

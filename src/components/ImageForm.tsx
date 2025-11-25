@@ -14,6 +14,7 @@ function ImageForm() {
     onSuccess: (res: any) => setDescription(res),
   });
   function handleButtonClick() {
+    setError(null);
     fileInputRef.current?.click();
   }
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,7 +27,6 @@ function ImageForm() {
     if (error) {
       setError(error);
     }
-    console.log(file);
     await mutation.mutateAsync({ file });
   }
   return (
@@ -36,10 +36,11 @@ function ImageForm() {
           <h1 className="text-xl font-semibold text-gray-900">
             Caption this image...
           </h1>
-          <select className="border border-gray-300 rounded-md px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          {/* TODO */}
+          {/* <select className="border border-gray-300 rounded-md px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>English</option>
             <option>Polish</option>
-          </select>
+          </select> */}
         </div>
 
         <div className="relative border-2 border-dashed hover:border-orange-500 border-gray-300 rounded-lg p-12 text-center bg-white">
@@ -78,8 +79,12 @@ function ImageForm() {
             JPG, JPEG, PNG, GIF, BMP files less than 4MB
           </p>
           <div className="mt-6">
-            <label className="block text-sm text-gray-600 mb-2">
-              {description}
+            <label
+              className={`block text-sm ${
+                error ? "text-red-600" : "text-gray-600"
+              } mb-2`}
+            >
+              {error ?? description}
             </label>
           </div>
         </div>
