@@ -3,7 +3,6 @@ import type RegisterRequest from "../types/API/RegisterRequest";
 
 // const apiUrl = import.meta.env.API_URL;
 const apiUrl = "https://localhost:7033/api";
-console.log(apiUrl);
 
 export async function registerUser(registerData: RegisterRequest) {
   const response = await fetch(`${apiUrl}/identity/register`, {
@@ -39,6 +38,5 @@ export async function loginUser(loginData: LoginRequest) {
     const error = new Error(errorMessage);
     throw error;
   }
-  console.log(data);
   return data;
 }

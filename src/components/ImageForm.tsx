@@ -1,4 +1,14 @@
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import type CreateImageRequest from "../types/API/CreateImageRequest";
+import { addImage } from "../client/images";
+
 function ImageForm() {
+  const [error, setError] = useState<string | null>(null);
+  const mutation = useMutation({
+    mutationFn: (image: CreateImageRequest) => addImage(image),
+    onError: (err: any) => setError(err.message),
+  });
   return (
     <div className="w-full max-w-3xl">
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -12,7 +22,7 @@ function ImageForm() {
           </select>
         </div>
 
-        <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-white">
+        <div className="relative border-2 border-dashed hover:border-orange-500 border-gray-300 rounded-lg p-12 text-center bg-white">
           <div className="mb-4">
             <svg
               className="mx-auto h-12 w-12 text-gray-300"
@@ -30,19 +40,13 @@ function ImageForm() {
           </div>
           <p className="text-gray-600 mb-2">
             Drop your image here, or{" "}
-            <button className="text-orange-500 hover:text-orange-600 font-medium">
+            <button className="text-blue-600 hover:text-orange-600 font-medium">
               select one
             </button>
           </p>
           <p className="text-sm text-gray-400">
-            JPG, PNG, GIF files less than 10MB
+            JPG, JPEG, PNG, GIF, BMP files less than 4MB
           </p>
-        </div>
-
-        <div className="mt-6">
-          <label className="block text-sm text-gray-600 mb-2">
-            Description (optional)
-          </label>
         </div>
       </div>
     </div>
