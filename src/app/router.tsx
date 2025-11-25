@@ -5,6 +5,7 @@ import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import MainPage from "../pages/Main";
 import AuthenticatedLayout from "../pages/AuthenticatedLayout";
+import ImagesPage from "../pages/ImagesPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <MainPage />,
+          },
+        ],
+      },
+      {
+        path: "images",
+        element: <AuthenticatedLayout />,
+        children: [
+          {
+            index: true,
+            element: <ImagesPage />,
           },
         ],
       },
