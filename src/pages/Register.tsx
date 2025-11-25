@@ -78,7 +78,7 @@ function RegisterPage() {
             {error && <ValidationError text={error} />}
             <div className="flex my-4 justify-between">
               <Link to="/">
-                <Button color="gray" width={24}>
+                <Button type="button" color="gray" width={24}>
                   Back
                 </Button>
               </Link>

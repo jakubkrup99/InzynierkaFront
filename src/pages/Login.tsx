@@ -1,4 +1,4 @@
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiAt } from "react-icons/ci";
 import { CiLock } from "react-icons/ci";
 import Button from "../components/Button";
@@ -60,7 +60,7 @@ function LoginPage() {
             {error && <ValidationError text={error} />}
             <div className="flex my-4 justify-between">
               <Link to="/">
-                <Button color="gray" width={24}>
+                <Button type="button" color="gray" width={24}>
                   Back
                 </Button>
               </Link>

@@ -1,0 +1,52 @@
+function ImageForm() {
+  return (
+    <div className="w-full max-w-3xl">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl font-semibold text-gray-900">
+            Caption this image...
+          </h1>
+          <select className="border border-gray-300 rounded-md px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>English</option>
+            <option>Polish</option>
+          </select>
+        </div>
+
+        <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-white">
+          <div className="mb-4">
+            <svg
+              className="mx-auto h-12 w-12 text-gray-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          </div>
+          <p className="text-gray-600 mb-2">
+            Drop your image here, or{" "}
+            <button className="text-orange-500 hover:text-orange-600 font-medium">
+              select one
+            </button>
+          </p>
+          <p className="text-sm text-gray-400">
+            JPG, PNG, GIF files less than 10MB
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-sm text-gray-600 mb-2">
+            Description (optional)
+          </label>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ImageForm;
