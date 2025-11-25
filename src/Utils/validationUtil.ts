@@ -16,4 +16,25 @@ function validateEmail(email: string | undefined): ValidationResult {
   };
 }
 
-export { validateEmail };
+function validateFile(file: File) {
+  const validTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/gif",
+    "image/bmp",
+  ];
+  const maxSize = 4 * 1024 * 1024; // 4MB
+
+  if (!validTypes.includes(file.type)) {
+    return "Please upload a JPG, JPEG, BMP, PNG, or GIF file";
+  }
+
+  if (file.size > maxSize) {
+    return "File size must be less than 10MB";
+  }
+
+  return null;
+}
+
+export { validateEmail, validateFile };

@@ -1,14 +1,34 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type CreateImageRequest from "../types/API/CreateImageRequest";
 import { addImage } from "../client/images";
+import { validateFile } from "../Utils/validationUtil";
 
 function ImageForm() {
   const [error, setError] = useState<string | null>(null);
+  const [description, setDescription] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const mutation = useMutation({
     mutationFn: (image: CreateImageRequest) => addImage(image),
     onError: (err: any) => setError(err.message),
+    onSuccess: (res: any) => setDescription(res),
   });
+  function handleButtonClick() {
+    fileInputRef.current?.click();
+  }
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0]);
+    }
+  }
+  async function handleFile(file: File) {
+    const error = validateFile(file);
+    if (error) {
+      setError(error);
+    }
+    console.log(file);
+    await mutation.mutateAsync({ file });
+  }
   return (
     <div className="w-full max-w-3xl">
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -23,6 +43,13 @@ function ImageForm() {
         </div>
 
         <div className="relative border-2 border-dashed hover:border-orange-500 border-gray-300 rounded-lg p-12 text-center bg-white">
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/bmp"
+            onChange={handleChange}
+          />
           <div className="mb-4">
             <svg
               className="mx-auto h-12 w-12 text-gray-300"
@@ -40,13 +67,21 @@ function ImageForm() {
           </div>
           <p className="text-gray-600 mb-2">
             Drop your image here, or{" "}
-            <button className="text-blue-600 hover:text-orange-600 font-medium">
+            <button
+              className="text-blue-600 hover:text-orange-600 font-medium"
+              onClick={handleButtonClick}
+            >
               select one
             </button>
           </p>
           <p className="text-sm text-gray-400">
             JPG, JPEG, PNG, GIF, BMP files less than 4MB
           </p>
+          <div className="mt-6">
+            <label className="block text-sm text-gray-600 mb-2">
+              {description}
+            </label>
+          </div>
         </div>
       </div>
     </div>
