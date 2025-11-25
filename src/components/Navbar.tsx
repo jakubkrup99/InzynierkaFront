@@ -1,6 +1,6 @@
 import { CiSearch } from "react-icons/ci";
 import Button from "./Button";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ function Navbar() {
       <Button color="darkBlue" width={24} onClick={() => navigate("/images")}>
         Images
       </Button>
-      <Button color="darkBlue" width={24} onClick={() => navigate("/main")}>
-        Add Image
+      <Button color="darkBlue" width={32} onClick={() => navigate("/main")}>
+        Add image
       </Button>
       <div className="relative bg-gray-300 dark:bg-gray-800 rounded-lg grow-2 max-w-80">
         <CiSearch
@@ -32,7 +32,7 @@ function Navbar() {
           className="w-full border rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-blue-500 outline-none bg-transparen dark:placeholder:text-gray-200 placeholder:text-black"
         />
       </div>
-      <Button color="darkBlue" width={24}>
+      <Button color="darkBlue" width={32}>
         Log out
       </Button>
     </nav>

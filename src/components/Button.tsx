@@ -9,6 +9,7 @@ function Button({
   children,
   color = "blue",
   width = 72,
+  className = "",
   ...props
 }: ButtonProps) {
   const colorStyles = {
