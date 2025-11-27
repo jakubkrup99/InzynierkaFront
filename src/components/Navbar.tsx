@@ -1,26 +1,23 @@
 import { CiSearch } from "react-icons/ci";
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isImagesPage = location.pathname === "/images";
   return (
     <nav className="fixed top-0 w-full bg-gray-100 dark:bg-blue-600 p-3 flex justify-between items-center gap-2">
       {" "}
-      {/* <div className="flex justify-center items-center bg-gray-100 dark:bg-gray-800 dark:text-gray-300 p-1 rounded-s-sm gap-2 cursor-text mb-2">
-        <CiSearch size={20} className="ml-2" />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full  rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200"
-        />
-      </div> */}
-      <Button color="darkBlue" width={24} onClick={() => navigate("/images")}>
-        Images
-      </Button>
-      <Button color="darkBlue" width={32} onClick={() => navigate("/main")}>
-        Add image
-      </Button>
+      {!isImagesPage ? (
+        <Button color="darkBlue" width={24} onClick={() => navigate("/images")}>
+          Images
+        </Button>
+      ) : (
+        <Button color="darkBlue" width={32} onClick={() => navigate("/main")}>
+          Add image
+        </Button>
+      )}
       <div className="relative bg-gray-300 dark:bg-gray-800 rounded-lg grow-2 max-w-80">
         <CiSearch
           size={20}

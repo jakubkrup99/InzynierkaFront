@@ -1,5 +1,5 @@
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import Button from "./Button";
+import PageSizeButton from "./PageSizeButton";
 
 interface PaginationFooterProps {
   currentPage: number;
@@ -28,9 +28,9 @@ function PaginationFooter({
   return (
     <footer className=" bg-white border-t border-gray-200 shadow-lg mt-2">
       <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center justify-center flex-wrap gap-4">
           {/* Stats Section */}
-          <div className="flex items-center gap-6 text-xl text-gray-600">
+          <div className="flex items-center gap-6 justify-center text-xl flex-wrap text-gray-600">
             <span className="font-semibold">
               Total Images: <span className="text-blue-600">{totalImages}</span>
             </span>
@@ -38,10 +38,14 @@ function PaginationFooter({
               Page: <span className="text-blue-600">{currentPage}</span> of{" "}
               <span className="text-blue-600">{totalPages}</span>
             </span>
-            <span className="font-semibold">Page Size: </span>
+            <div className="flex justify-center items-center gap-4">
+              <span className="font-semibold">Page Size: </span>
+              <PageSizeButton size={5} />
+              <PageSizeButton size={10} />
+              <PageSizeButton size={15} />
+              <PageSizeButton size={30} />
+            </div>
           </div>
-
-          {/* Navigation Buttons */}
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrevious}
