@@ -21,7 +21,6 @@ function ImagesPage() {
   }
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Optional: scroll to top
   };
   return (
     <div>

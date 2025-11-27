@@ -4,7 +4,7 @@ interface PageSizeButtonProps {
 
 function PageSizeButton({ size }: PageSizeButtonProps) {
   return (
-    <button className="bg-blue-600 min-w-10 p-2 rounded-lg text-white">
+    <button className="bg-blue-600 min-w-12 p-2 rounded-lg text-white">
       {size}
     </button>
   );
