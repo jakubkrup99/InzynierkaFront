@@ -1,10 +1,14 @@
 interface PageSizeButtonProps {
   size: number;
+  onClick?: () => void;
 }
 
-function PageSizeButton({ size }: PageSizeButtonProps) {
+function PageSizeButton({ size, onClick }: PageSizeButtonProps) {
   return (
-    <button className="bg-blue-600 min-w-12 p-2 rounded-lg text-white">
+    <button
+      onClick={onClick}
+      className="bg-blue-600 min-w-12 p-2 rounded-lg text-white"
+    >
       {size}
     </button>
   );

@@ -6,6 +6,7 @@ interface PaginationFooterProps {
   totalPages: number;
   totalImages: number;
   onPageChange: (page: number) => void;
+  onSizeChange: (size: number) => void;
 }
 
 function PaginationFooter({
@@ -13,6 +14,7 @@ function PaginationFooter({
   totalImages,
   totalPages,
   onPageChange,
+  onSizeChange,
 }: PaginationFooterProps) {
   function handlePrevious() {
     if (currentPage > 1) {
@@ -25,6 +27,7 @@ function PaginationFooter({
       onPageChange(currentPage + 1);
     }
   }
+
   return (
     <footer className=" bg-white border-t border-gray-200 shadow-lg mt-2">
       <div className="max-w-7xl mx-auto px-4 py-4 h-full">
@@ -39,10 +42,10 @@ function PaginationFooter({
             </span>
             <div className="flex justify-center items-center gap-2">
               <span className="font-semibold">Page Size: </span>
-              <PageSizeButton size={5} />
-              <PageSizeButton size={10} />
-              <PageSizeButton size={15} />
-              <PageSizeButton size={30} />
+              <PageSizeButton size={5} onClick={() => onSizeChange(5)} />
+              <PageSizeButton size={10} onClick={() => onSizeChange(10)} />
+              <PageSizeButton size={15} onClick={() => onSizeChange(15)} />
+              <PageSizeButton size={30} onClick={() => onSizeChange(30)} />
             </div>
           </div>
           <div className="flex items-center gap-2">

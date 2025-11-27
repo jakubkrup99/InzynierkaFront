@@ -6,22 +6,25 @@ import { useState } from "react";
 
 function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [imagesAmount, setImagesAmount] = useState(10);
+  const [pageSize, setPageSize] = useState(10);
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["images", currentPage, imagesAmount],
-    queryFn: () =>
-      GetImages({ pageNumber: currentPage, pageSize: imagesAmount }),
+    queryKey: ["images", currentPage, pageSize],
+    queryFn: () => GetImages({ pageNumber: currentPage, pageSize: pageSize }),
   });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (isError || data === null) {
-    return <div>Loading images failed...</div>;
+    return <div>Loading images failed</div>;
   }
-  const handlePageChange = (page: number) => {
+  function handlePageChange(page: number) {
     setCurrentPage(page);
-  };
+  }
+
+  function handleSizeChange(size: number) {
+    setPageSize(size);
+  }
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-32 p-4">
@@ -39,6 +42,7 @@ function ImagesPage() {
         totalPages={data.totalPages}
         totalImages={data.totalItemsCount}
         onPageChange={handlePageChange}
+        onSizeChange={handleSizeChange}
       />
     </div>
   );
