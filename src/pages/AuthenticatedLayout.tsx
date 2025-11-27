@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { SearchProvider } from "../context/SearchContext";
 
 function AuthenticatedLayout() {
   return (
     <>
-      <Navbar />
-      <Outlet />
+      <SearchProvider>
+        <Navbar />
+        <Outlet />
+      </SearchProvider>
     </>
   );
 }
