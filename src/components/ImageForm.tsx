@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import type CreateImageRequest from "../types/API/CreateImageRequest";
 import { addImage } from "../client/images";
 import { validateFile } from "../Utils/validationUtil";
+import toast from "react-hot-toast";
 
 function ImageForm() {
   const [error, setError] = useState<string | null>(null);
@@ -10,8 +11,13 @@ function ImageForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mutation = useMutation({
     mutationFn: (image: CreateImageRequest) => addImage(image),
-    onError: (err: any) => setError(err.message),
-    onSuccess: (res: any) => setDescription(res),
+    onError: () => {
+      toast.error("Image upload failed.");
+    },
+    onSuccess: (res: any) => {
+      toast.success("Your image has been added.");
+      setDescription(res);
+    },
   });
   function handleButtonClick() {
     setError(null);
@@ -42,7 +48,6 @@ function ImageForm() {
             <option>Polish</option>
           </select> */}
         </div>
-
         <div className="relative border-2 border-dashed hover:border-orange-500 border-gray-300 rounded-lg p-12 text-center bg-white">
           <input
             ref={fileInputRef}

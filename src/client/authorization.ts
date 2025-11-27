@@ -12,14 +12,15 @@ export async function registerUser(registerData: RegisterRequest) {
       "Content-Type": "application/json",
     },
   });
-  const data = await response.json();
   if (!response.ok) {
+    const data = await response.json();
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]
       : "Registration failed";
     const error = new Error(errorMessage);
     throw error;
   }
+  return response;
 }
 
 export async function loginUser(loginData: LoginRequest) {

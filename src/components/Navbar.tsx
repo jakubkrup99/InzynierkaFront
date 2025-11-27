@@ -9,6 +9,11 @@ function Navbar() {
   const location = useLocation();
   const isImagesPage = location.pathname === "/images";
 
+  function logout() {
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -50,7 +55,7 @@ function Navbar() {
       </div>
 
       <div className="hidden md:flex">
-        <Button color="darkBlue" width={32}>
+        <Button color="darkBlue" width={32} onClick={logout}>
           Log out
         </Button>
       </div>

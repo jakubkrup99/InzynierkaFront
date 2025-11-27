@@ -1,6 +1,6 @@
 import { CiAt, CiLock } from "react-icons/ci";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ValidationError from "../components/ValidationError";
 import { validateEmail } from "../Utils/validationUtil";
@@ -8,12 +8,21 @@ import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../client/authorization";
 import type RegisterRequest from "../types/API/RegisterRequest";
+import toast from "react-hot-toast";
 
 function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (registerData: RegisterRequest) => registerUser(registerData),
-    onError: (err: any) => setError(err.message),
+    onError: (err: any) => {
+      toast.error("Account creation failed.");
+      setError(err.message);
+    },
+    onSuccess: () => {
+      toast.success("Your account has been created.");
+      navigate("/");
+    },
   });
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
