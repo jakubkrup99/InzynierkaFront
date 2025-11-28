@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ImageCard from "../components/ImageCard";
-import { GetImages } from "../client/images";
+import { deleteImage, GetImages } from "../client/images";
 import PaginationFooter from "../components/PaginationFooter";
 import { useEffect, useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
@@ -11,6 +11,7 @@ function ImagesPage() {
   const { searchPhrase } = useSearchPhrase();
   const [debouncedSearchPhrase, setDebouncedSearchPhrase] =
     useState(searchPhrase);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -29,6 +30,24 @@ function ImagesPage() {
         pageSize: pageSize,
         searchPhrase: debouncedSearchPhrase,
       }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (imageId: string) => deleteImage(imageId),
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData(
+        ["images", currentPage, pageSize, debouncedSearchPhrase],
+        (old: any) => {
+          if (!old) return old;
+          console.log(old);
+          return {
+            ...old,
+            items: old.items.filter((x: any) => x.publicId !== deletedId),
+            totalItemsCount: old.totalItemsCount - 1,
+          };
+        }
+      );
+    },
   });
 
   if (isLoading) {
@@ -52,7 +71,10 @@ function ImagesPage() {
             key={image.publicId}
             azureDescription={image.azureDescription}
             trainedModelDescription={image.trainedModelDescription}
+            imageId={image.publicId}
+            onDelete={deleteMutation.mutate}
             imageUrl={image.url}
+            title={image.title}
           />
         ))}
       </div>

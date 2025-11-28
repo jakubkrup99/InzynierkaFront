@@ -16,7 +16,6 @@ export async function addImage(createImage: CreateImageRequest) {
     },
   });
   const data = await response.json();
-  console.log(data, "data");
   if (!response.ok) {
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]
@@ -44,15 +43,12 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
     url += `&sortDirection=${sortDirection}`;
   }
 
-  console.log(url, "url");
   const response = await fetch(url, {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
-  console.log(response, "response");
   const data = await response.json();
-  console.log(data, "data");
   if (!response.ok) {
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]
@@ -62,4 +58,24 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
   }
 
   return data;
+}
+
+export async function deleteImage(imageId: string) {
+  const token = getAuthToken();
+  console.log(token, "token");
+  console.log(imageId, "imageId");
+  const response = await fetch(`${apiUrl}/images/${imageId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    const errorMessage = data.errors
+      ? (Object.values(data.errors)[0] as string[])[0]
+      : "Generating caption failed";
+    const error = new Error(errorMessage);
+    throw error;
+  }
 }
