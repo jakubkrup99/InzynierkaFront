@@ -7,7 +7,7 @@ import ValidationError from "../components/ValidationError";
 import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
-import { loginUser } from "../client/authorization";
+import { loginUser, saveTokens } from "../client/authorization";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -24,10 +24,7 @@ function LoginPage() {
       password: formData.get("password")!.toString(),
     };
     const response = await mutation.mutateAsync(loginData);
-    localStorage.setItem("token", response.accessToken);
-    const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 1);
-    localStorage.setItem("expiration", expirationDate.toISOString());
+    saveTokens(response.accessToken, response.refreshToken);
     navigate("/main");
   }
   return (

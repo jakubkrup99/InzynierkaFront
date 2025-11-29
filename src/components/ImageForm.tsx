@@ -37,7 +37,7 @@ function ImageForm() {
     },
     onSuccess: (res: any) => {
       toast.success("Your image has been added.");
-      console.log(res, "res");
+      setError(null);
       setImageState({
         ...imageState,
         isAdded: true,
@@ -68,6 +68,11 @@ function ImageForm() {
     const error = validateFile(file);
     if (error) {
       setError(error);
+      return;
+    }
+    if (title === "") {
+      setError("Title can't be empty!");
+      return;
     }
     await mutation.mutateAsync({ file, title });
   }
@@ -171,17 +176,17 @@ function ImageForm() {
             <p className="text-sm text-gray-400">
               JPG, JPEG, PNG, GIF, BMP files less than 4MB
             </p>
-            <div className="mt-6">
-              <label
-                className={`block text-sm ${
-                  error ? "text-red-600" : "text-gray-600"
-                } mb-2`}
-              >
-                {error}
-              </label>
-            </div>
           </div>
         )}
+        <div className="mt-6 flex justify-center">
+          <label
+            className={`block text-sm ${
+              error ? "text-red-600" : "text-gray-600"
+            } mb-2`}
+          >
+            {error}
+          </label>
+        </div>
       </div>
     </div>
   );

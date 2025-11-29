@@ -1,23 +1,17 @@
 import type CreateImageRequest from "../types/API/CreateImageRequest";
 import type GetImagesRequest from "../types/API/GetImagesRequest";
-import { getAuthToken } from "../Utils/auth";
+import { apiFetch } from "./authorization";
 
 const apiUrl = "https://localhost:7033/api";
 
 export async function addImage(createImage: CreateImageRequest) {
-  const token = getAuthToken();
   const formData = new FormData();
-  console.log(createImage, "createImageRequest");
   formData.append("File", createImage.file);
   formData.append("Title", createImage.title);
-  const response = await fetch(`${apiUrl}/images`, {
+  const response = await apiFetch(`${apiUrl}/images`, {
     method: "POST",
     body: formData,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
-  console.log(response);
   const data = await response.json();
   if (!response.ok) {
     const errorMessage = data.errors
@@ -31,7 +25,6 @@ export async function addImage(createImage: CreateImageRequest) {
 }
 
 export async function GetImages(GetImagesRequest: GetImagesRequest) {
-  const token = getAuthToken();
   const { searchPhrase, pageNumber, pageSize, sortBy, sortDirection } =
     GetImagesRequest;
 
@@ -46,11 +39,7 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
     url += `&sortDirection=${sortDirection}`;
   }
 
-  const response = await fetch(url, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await apiFetch(url);
   const data = await response.json();
   if (!response.ok) {
     const errorMessage = data.errors
@@ -64,14 +53,8 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
 }
 
 export async function deleteImage(imageId: string) {
-  const token = getAuthToken();
-  console.log(token, "token");
-  console.log(imageId, "imageId");
-  const response = await fetch(`${apiUrl}/images/${imageId}`, {
+  const response = await apiFetch(`${apiUrl}/images/${imageId}`, {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
   if (!response.ok) {
     const data = await response.json();
