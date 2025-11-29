@@ -7,7 +7,7 @@ import { useSearchPhrase } from "../context/SearchContext";
 
 function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const { searchPhrase } = useSearchPhrase();
   const [debouncedSearchPhrase, setDebouncedSearchPhrase] =
     useState(searchPhrase);

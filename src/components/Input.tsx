@@ -15,7 +15,7 @@ function Input({ Icon, name, placeholder, type }: InputProps) {
     >
       <Icon size={20} />
       <input
-        className="flex-1 bg-transparent outline-none autofill:bg-transparent autofill:dark:bg-transparent"
+        className="flex-1 bg-transparent outline-none autofill:bg-transparent"
         id={name}
         type={type}
         name={name}

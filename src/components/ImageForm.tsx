@@ -1,36 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type CreateImageRequest from "../types/API/CreateImageRequest";
 import { addImage } from "../client/images";
 import { validateFile } from "../Utils/validationUtil";
 import toast from "react-hot-toast";
 import RoundDeleteButton from "./Buttons/RoundDeleteButton";
-import Button from "./Buttons/Button";
 import ImageDescription from "./ImageDescription";
+import ImageDropZone from "./ImageDropZone";
+import { ImagePreview } from "./ImagePreview";
+import { CaptionGeneratorForm } from "./CaptionGeneratorForm";
+import { ErrorMessage } from "./ErrorMessage";
+import useDragAndDrop from "../hooks/useDragAndDrop";
+import useImageUpload from "../hooks/useImageUpload";
 
-interface ImageState {
-  isAdded: boolean;
-  isCaption: boolean;
-  azureCaption: string;
-  modelCaption: string;
-  url: string;
-  title: string;
-  file: File | null;
-}
-
-function ImageForm() {
+export default function ImageForm() {
   const [error, setError] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [imageState, setImageState] = useState<ImageState>({
-    isAdded: false,
-    isCaption: false,
-    azureCaption: "",
-    modelCaption: "",
-    url: "",
-    title: "",
-    file: null,
-  });
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { imageState, setImage, setTitle, setCaptions, resetImage } =
+    useImageUpload();
+
   const mutation = useMutation({
     mutationFn: (image: CreateImageRequest) => addImage(image),
     onError: () => {
@@ -39,80 +26,36 @@ function ImageForm() {
     onSuccess: (res: any) => {
       toast.success("Your image has been added.");
       setError(null);
-      setImageState({
-        ...imageState,
-        isAdded: true,
-        isCaption: true,
-        azureCaption: res.azureDescription,
-        modelCaption: res.modelDescription,
-      });
+      setCaptions(res.azureDescription, res.modelDescription);
     },
   });
-  function handleDragEnter(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-    console.log("Drag enter");
-  }
 
-  function handleDragLeave(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    console.log("Drag leave");
-  }
+  const {
+    isDragging,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+  } = useDragAndDrop(setImage);
 
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Drag over");
-  }
-
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    const files = e.dataTransfer.files;
-    console.log(files, "files");
-    if (!files || !files[0]) return;
-
-    setImageState({
-      ...imageState,
-      isAdded: true,
-      url: URL.createObjectURL(files[0]),
-      file: files[0],
-    });
-  }
-  function handleButtonClick() {
-    setError(null);
-    fileInputRef.current?.click();
-  }
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files || !files[0]) return;
-    setImageState({
-      ...imageState,
-      isAdded: true,
-      url: URL.createObjectURL(files[0]),
-      file: files[0],
-    });
-  }
-
-  function handleTitleChange(e: any) {
-    setImageState({ ...imageState, title: e.target.value });
-  }
-  async function handleGenerateCaption({ file, title }: CreateImageRequest) {
-    const error = validateFile(file);
-    if (error) {
-      setError(error);
+  const handleGenerateCaption = async () => {
+    const fileError = validateFile(imageState.file!);
+    if (fileError) {
+      setError(fileError);
       return;
     }
-    if (title === "") {
+    if (imageState.title === "") {
       setError("Title can't be empty!");
       return;
     }
-    await mutation.mutateAsync({ file, title });
-  }
+
+    setError(null);
+    await mutation.mutateAsync({
+      file: imageState.file!,
+      title: imageState.title,
+    });
+  };
+
   return (
     <div className="w-full max-w-3xl">
       <div className="bg-white rounded-lg shadow-sm p-6 mt-32 mb-8">
@@ -120,121 +63,41 @@ function ImageForm() {
           <h1 className="text-xl font-semibold text-gray-900">
             Caption this image...
           </h1>
-          {imageState.isAdded && (
-            <RoundDeleteButton
-              onClick={() =>
-                setImageState({
-                  isAdded: false,
-                  url: "",
-                  title: "",
-                  isCaption: false,
-                  file: null,
-                  azureCaption: "",
-                  modelCaption: "",
-                })
-              }
-            />
-          )}
+          {imageState.isAdded && <RoundDeleteButton onClick={resetImage} />}
         </div>
+
         {imageState.isAdded ? (
           <div>
-            <div className="flex justify-center">
-              <img
-                src={imageState.url}
-                className="h-92 w-92"
-                alt="Image that you have just added"
+            <ImagePreview url={imageState.url} />
+
+            {!imageState.isCaption ? (
+              <CaptionGeneratorForm
+                title={imageState.title}
+                onTitleChange={setTitle}
+                onGenerate={handleGenerateCaption}
+                isGenerating={mutation.isPending}
               />
-            </div>
-            <div className="flex items-center flex-col ">
-              {imageState.isAdded && !imageState.isCaption && (
-                <>
-                  <input
-                    value={imageState.title}
-                    onChange={handleTitleChange}
-                    type="text"
-                    placeholder="Title"
-                    className="w-92 border-2 rounded-lg p-3 m-2 bg-gray-400 focus:ring-2 focus:ring-blue-500 border-blue-500 outline-none placeholder:text-gray-700 text-black"
-                  />
-                  <Button
-                    width={92}
-                    onClick={() =>
-                      handleGenerateCaption({
-                        file: imageState.file!,
-                        title: imageState.title,
-                      })
-                    }
-                  >
-                    {mutation.isPending ? "Generating..." : "Generate caption"}
-                  </Button>
-                </>
-              )}
-              {imageState.isAdded && imageState.isCaption && (
-                <ImageDescription
-                  title={imageState.title}
-                  azureDescription={imageState.azureCaption}
-                  trainedModelDescription={imageState.modelCaption}
-                />
-              )}
-            </div>
+            ) : (
+              <ImageDescription
+                title={imageState.title}
+                azureDescription={imageState.azureCaption}
+                trainedModelDescription={imageState.modelCaption}
+              />
+            )}
           </div>
         ) : (
-          <div
+          <ImageDropZone
+            isDragging={isDragging}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`relative border-2 border-dashed hover:border-orange-500 ${
-              isDragging ? "border-orange-500" : "border-gray-300"
-            } rounded-lg p-12 text-center bg-white`}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              className="hidden"
-              accept="image/jpeg,image/jpg,image/png,image/gif,image/bmp"
-              onChange={handleChange}
-            />
-            <div className="mb-4">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-            </div>
-            <p className="text-gray-600 mb-2">
-              Drop your image here, or{" "}
-              <button
-                className="text-blue-600 hover:text-orange-600 font-medium"
-                onClick={handleButtonClick}
-              >
-                select one
-              </button>
-            </p>
-            <p className="text-sm text-gray-400">
-              JPG, JPEG, PNG, GIF, BMP files less than 4MB
-            </p>
-          </div>
+            onFileSelect={setImage}
+          />
         )}
-        <div className="mt-6 flex justify-center">
-          <label
-            className={`block text-sm ${
-              error ? "text-red-600" : "text-gray-600"
-            } mb-2`}
-          >
-            {error}
-          </label>
-        </div>
+
+        <ErrorMessage message={error} />
       </div>
     </div>
   );
 }
-
-export default ImageForm;
