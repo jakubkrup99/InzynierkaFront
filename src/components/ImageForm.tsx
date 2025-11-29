@@ -20,6 +20,7 @@ interface ImageState {
 
 function ImageForm() {
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const [imageState, setImageState] = useState<ImageState>({
     isAdded: false,
     isCaption: false,
@@ -47,17 +48,53 @@ function ImageForm() {
       });
     },
   });
+  function handleDragEnter(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    console.log("Drag enter");
+  }
+
+  function handleDragLeave(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    console.log("Drag leave");
+  }
+
+  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Drag over");
+  }
+
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    console.log(files, "files");
+    if (!files || !files[0]) return;
+
+    setImageState({
+      ...imageState,
+      isAdded: true,
+      url: URL.createObjectURL(files[0]),
+      file: files[0],
+    });
+  }
   function handleButtonClick() {
     setError(null);
     fileInputRef.current?.click();
   }
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files || !e.target.files[0]) return;
+    const files = e.target.files;
+    if (!files || !files[0]) return;
     setImageState({
       ...imageState,
       isAdded: true,
-      url: URL.createObjectURL(e.target.files[0]),
-      file: e.target.files[0],
+      url: URL.createObjectURL(files[0]),
+      file: files[0],
     });
   }
 
@@ -141,7 +178,15 @@ function ImageForm() {
             </div>
           </div>
         ) : (
-          <div className="relative  border-2 border-dashed hover:border-orange-500 border-gray-300 rounded-lg p-12 text-center bg-white">
+          <div
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`relative border-2 border-dashed hover:border-orange-500 ${
+              isDragging ? "border-orange-500" : "border-gray-300"
+            } rounded-lg p-12 text-center bg-white`}
+          >
             <input
               ref={fileInputRef}
               type="file"
