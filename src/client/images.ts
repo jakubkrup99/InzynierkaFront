@@ -7,7 +7,9 @@ const apiUrl = "https://localhost:7033/api";
 export async function addImage(createImage: CreateImageRequest) {
   const token = getAuthToken();
   const formData = new FormData();
+  console.log(createImage, "createImageRequest");
   formData.append("File", createImage.file);
+  formData.append("Title", createImage.title);
   const response = await fetch(`${apiUrl}/images`, {
     method: "POST",
     body: formData,
@@ -24,7 +26,7 @@ export async function addImage(createImage: CreateImageRequest) {
     throw error;
   }
 
-  return data.description;
+  return data;
 }
 
 export async function GetImages(GetImagesRequest: GetImagesRequest) {

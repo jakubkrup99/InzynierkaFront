@@ -1,6 +1,6 @@
 import { CiSearch } from "react-icons/ci";
 import { GiHamburgerMenu } from "react-icons/gi";
-import Button from "./Button";
+import Button from "./Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";

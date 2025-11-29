@@ -1,3 +1,5 @@
+import ImageDescription from "./ImageDescription";
+
 interface ImageCardProps {
   azureDescription: string;
   trainedModelDescription: string;
@@ -18,19 +20,15 @@ function ImageCard({
   return (
     <div className="max-w-5xl rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
       <img
-        className="w-full object-contain bg-gray-100"
+        className="h-92 w-full object-contain bg-gray-100"
         src={imageUrl}
         alt={azureDescription}
       />
-      <div className="p-6">
-        <h2 className="font-bold text-xl mb-2 text-gray-800">{title}</h2>
-        <p className="text-gray-600 text-base">
-          <b>Azure description:</b> {azureDescription}
-        </p>
-        <p className="text-gray-600 text-base">
-          <b>My description:</b> {trainedModelDescription}
-        </p>
-      </div>
+      <ImageDescription
+        title={title}
+        azureDescription={azureDescription}
+        trainedModelDescription={trainedModelDescription}
+      />
       <div className="px-6 pb-6">
         <button
           onClick={() => onDelete(imageId)}

@@ -1,5 +1,5 @@
 import { CiAt, CiLock } from "react-icons/ci";
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ValidationError from "../components/ValidationError";

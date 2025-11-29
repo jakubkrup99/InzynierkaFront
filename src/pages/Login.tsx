@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { CiAt } from "react-icons/ci";
 import { CiLock } from "react-icons/ci";
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { useState } from "react";
 import ValidationError from "../components/ValidationError";
 import Input from "../components/Input";
@@ -28,7 +28,6 @@ function LoginPage() {
     const expirationDate = new Date();
     expirationDate.setHours(expirationDate.getHours() + 1);
     localStorage.setItem("expiration", expirationDate.toISOString());
-    console.log("why not redirect");
     navigate("/main");
   }
   return (
