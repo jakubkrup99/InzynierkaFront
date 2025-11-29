@@ -6,12 +6,14 @@ import RegisterPage from "../pages/Register";
 import MainPage from "../pages/Main";
 import AuthenticatedLayout from "../pages/AuthenticatedLayout";
 import ImagesPage from "../pages/ImagesPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     id: "root",
+    errorElement: <NotFoundPage />,
     children: [
       { index: true, element: <HomePage /> },
       {
