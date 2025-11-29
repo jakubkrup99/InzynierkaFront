@@ -5,6 +5,7 @@ interface PaginationFooterProps {
   currentPage: number;
   totalPages: number;
   totalImages: number;
+  pageSize: number;
   onPageChange: (page: number) => void;
   onSizeChange: (size: number) => void;
 }
@@ -13,6 +14,7 @@ function PaginationFooter({
   currentPage,
   totalImages,
   totalPages,
+  pageSize,
   onPageChange,
   onSizeChange,
 }: PaginationFooterProps) {
@@ -38,31 +40,49 @@ function PaginationFooter({
             </span>
             <span className="font-semibold">
               Page: <span className="text-blue-600">{currentPage}</span> of{" "}
-              <span className="text-blue-600">{totalPages}</span>
+              <span className="text-blue-600">
+                {totalPages < 1 ? "1" : totalPages}
+              </span>
             </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrevious}
+                disabled={currentPage === 1}
+                className={`flex items-center gap-2 p-2 rounded-lg font-semibold transition-colors text-white bg-blue-600`}
+              >
+                <MdKeyboardArrowLeft size={28} />
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+                className={`flex items-center justify-end gap-2 p-2 rounded-lg font-semibold transition-colors text-white bg-blue-600`}
+              >
+                <MdKeyboardArrowRight size={28} />
+              </button>
+            </div>
             <div className="flex justify-center items-center gap-2">
               <span className="font-semibold">Page Size: </span>
-              <PageSizeButton size={5} onClick={() => onSizeChange(5)} />
-              <PageSizeButton size={10} onClick={() => onSizeChange(10)} />
-              <PageSizeButton size={15} onClick={() => onSizeChange(15)} />
-              <PageSizeButton size={30} onClick={() => onSizeChange(30)} />
+              <PageSizeButton
+                size={5}
+                isSelected={pageSize === 5}
+                onClick={() => onSizeChange(5)}
+              />
+              <PageSizeButton
+                size={10}
+                isSelected={pageSize === 10}
+                onClick={() => onSizeChange(10)}
+              />
+              <PageSizeButton
+                size={15}
+                isSelected={pageSize === 15}
+                onClick={() => onSizeChange(15)}
+              />
+              <PageSizeButton
+                size={30}
+                isSelected={pageSize === 30}
+                onClick={() => onSizeChange(30)}
+              />
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrevious}
-              disabled={currentPage === 1}
-              className={`flex items-center gap-2 p-2 rounded-lg font-semibold transition-colors text-white bg-blue-600`}
-            >
-              <MdKeyboardArrowLeft size={28} />
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className={`flex items-center justify-end gap-2 p-2 rounded-lg font-semibold transition-colors text-white bg-blue-600`}
-            >
-              <MdKeyboardArrowRight size={28} />
-            </button>
           </div>
         </div>
       </div>

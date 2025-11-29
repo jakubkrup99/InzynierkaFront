@@ -17,6 +17,7 @@ export async function addImage(createImage: CreateImageRequest) {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(response);
   const data = await response.json();
   if (!response.ok) {
     const errorMessage = data.errors

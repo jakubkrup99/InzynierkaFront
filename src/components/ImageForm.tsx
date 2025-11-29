@@ -65,7 +65,6 @@ function ImageForm() {
     setImageState({ ...imageState, title: e.target.value });
   }
   async function handleGenerateCaption({ file, title }: CreateImageRequest) {
-    console.log("click");
     const error = validateFile(file);
     if (error) {
       setError(error);
@@ -118,12 +117,12 @@ function ImageForm() {
                     width={92}
                     onClick={() =>
                       handleGenerateCaption({
-                        file: imageState.file,
+                        file: imageState.file!,
                         title: imageState.title,
                       })
                     }
                   >
-                    Generate caption
+                    {mutation.isPending ? "Generating..." : "Generate caption"}
                   </Button>
                 </>
               )}
@@ -172,6 +171,15 @@ function ImageForm() {
             <p className="text-sm text-gray-400">
               JPG, JPEG, PNG, GIF, BMP files less than 4MB
             </p>
+            <div className="mt-6">
+              <label
+                className={`block text-sm ${
+                  error ? "text-red-600" : "text-gray-600"
+                } mb-2`}
+              >
+                {error}
+              </label>
+            </div>
           </div>
         )}
       </div>

@@ -66,22 +66,29 @@ function ImagesPage() {
   return (
     <div className="w-full min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-32 p-4 min-h-screen">
-        {data.items.map((image: any) => (
-          <ImageCard
-            key={image.publicId}
-            azureDescription={image.azureDescription}
-            trainedModelDescription={image.trainedModelDescription}
-            imageId={image.publicId}
-            onDelete={deleteMutation.mutate}
-            imageUrl={image.url}
-            title={image.title}
-          />
-        ))}
+        {data.items.length > 0 ? (
+          data.items.map((image: any) => (
+            <ImageCard
+              key={image.publicId}
+              azureDescription={image.azureDescription}
+              trainedModelDescription={image.trainedModelDescription}
+              imageId={image.publicId}
+              onDelete={deleteMutation.mutate}
+              imageUrl={image.url}
+              title={image.title}
+            />
+          ))
+        ) : (
+          <h2 className="text-5xl text-center col-span-full">
+            There are no images
+          </h2>
+        )}
       </div>
       <PaginationFooter
         currentPage={currentPage}
         totalPages={data.totalPages}
         totalImages={data.totalItemsCount}
+        pageSize={pageSize}
         onPageChange={handlePageChange}
         onSizeChange={handleSizeChange}
       />
