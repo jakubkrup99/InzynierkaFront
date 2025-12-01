@@ -39,7 +39,6 @@ function ImagesPage() {
         ["images", currentPage, pageSize, debouncedSearchPhrase],
         (old: any) => {
           if (!old) return old;
-          console.log(old);
           return {
             ...old,
             items: old.items.filter((x: any) => x.publicId !== deletedId),
@@ -47,6 +46,9 @@ function ImagesPage() {
           };
         }
       );
+      queryClient.invalidateQueries({
+        queryKey: ["images", currentPage, pageSize, debouncedSearchPhrase],
+      });
     },
   });
 
@@ -62,6 +64,7 @@ function ImagesPage() {
 
   function handleSizeChange(size: number) {
     setPageSize(size);
+    setCurrentPage(1);
   }
   return (
     <div className="w-full min-h-screen">

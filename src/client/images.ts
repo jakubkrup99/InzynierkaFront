@@ -8,11 +8,23 @@ export async function addImage(createImage: CreateImageRequest) {
   const formData = new FormData();
   formData.append("File", createImage.file);
   formData.append("Title", createImage.title);
-  const response = await apiFetch(`${apiUrl}/images`, {
-    method: "POST",
-    body: formData,
-  });
-  const data = await response.json();
+  let response;
+
+  try {
+    response = await apiFetch(`${apiUrl}/images`, {
+      method: "POST",
+      body: formData,
+    });
+  } catch (err) {
+    throw new Error("Error while sending new image");
+  }
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("Error while parsing response from addImage");
+  }
+
   if (!response.ok) {
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]
@@ -38,9 +50,19 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
   if (sortDirection) {
     url += `&sortDirection=${sortDirection}`;
   }
+  let response;
+  try {
+    response = await apiFetch(url);
+  } catch (err) {
+    throw new Error("Network error while fetching images");
+  }
+  let data;
+  try {
+    data = await response.json();
+  } catch (err) {
+    throw new Error("Failed to parse server response");
+  }
 
-  const response = await apiFetch(url);
-  const data = await response.json();
   if (!response.ok) {
     const errorMessage = data.errors
       ? (Object.values(data.errors)[0] as string[])[0]
@@ -48,14 +70,19 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
     const error = new Error(errorMessage);
     throw error;
   }
-
+  console.log("Fetched images :/");
   return data;
 }
 
 export async function deleteImage(imageId: string) {
-  const response = await apiFetch(`${apiUrl}/images/${imageId}`, {
-    method: "DELETE",
-  });
+  let response;
+  try {
+    response = await apiFetch(`${apiUrl}/images/${imageId}`, {
+      method: "DELETE",
+    });
+  } catch {
+    throw new Error("Error while deleting image");
+  }
   if (!response.ok) {
     const data = await response.json();
     const errorMessage = data.errors
