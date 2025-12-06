@@ -26,6 +26,10 @@ function LoginPage() {
     await mutation.mutateAsync(loginData);
     navigate("/main");
   }
+  function handleGoogleLogin() {
+    window.location.href =
+      "https://localhost:7033/api/authorization/google?returnUrl=http://localhost:5173";
+  }
   return (
     <div className="w-full min-h-screen flex mx-2">
       <div className="hidden md:flex md:w-1/3 items-center justify-end bg-gray-100 dark:bg-midnight p-8">
@@ -64,6 +68,7 @@ function LoginPage() {
               </Button>
             </div>
           </form>
+          <Button onClick={handleGoogleLogin}>Login with google</Button>
         </div>
       </div>
     </div>
