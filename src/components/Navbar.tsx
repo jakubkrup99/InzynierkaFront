@@ -25,7 +25,7 @@ function Navbar() {
         {!isImagesPage ? (
           <Button
             color="darkBlue"
-            width={24}
+            width={64}
             onClick={() => navigate("/images")}
           >
             Your images

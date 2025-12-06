@@ -8,6 +8,7 @@ import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
 import { loginUser } from "../client/authorization";
+import { FcGoogle } from "react-icons/fc";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +69,18 @@ function LoginPage() {
               </Button>
             </div>
           </form>
-          <Button onClick={handleGoogleLogin}>Login with google</Button>
+          <div className="flex justify-end">
+            <Button
+              onClick={handleGoogleLogin}
+              width={64}
+              customStyles={
+                "max-w-3xl flex items-center justify-between text-l"
+              }
+            >
+              <FcGoogle size={24} className="mr-2" />
+              Login with google
+            </Button>
+          </div>
         </div>
       </div>
     </div>

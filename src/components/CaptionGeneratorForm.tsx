@@ -16,7 +16,11 @@ export function CaptionGeneratorForm({
 }: CaptionGeneratorFormProps) {
   return (
     <div className="flex items-center flex-col">
-      <ImageTitleInput value={title} onChange={onTitleChange} />
+      <ImageTitleInput
+        value={title}
+        onChange={onTitleChange}
+        onKeyDown={onGenerate}
+      />
       <Button width={92} onClick={onGenerate} disabled={isGenerating}>
         {isGenerating ? "Generating..." : "Generate caption"}
       </Button>

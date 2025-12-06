@@ -3,6 +3,7 @@ import React from "react";
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: "blue" | "gray" | "darkBlue";
   width?: number;
+  customStyles?: string;
 };
 
 function Button({
@@ -10,6 +11,7 @@ function Button({
   color = "blue",
   width = 72,
   className = "",
+  customStyles,
   ...props
 }: ButtonProps) {
   const colorStyles = {
@@ -20,7 +22,7 @@ function Button({
   return (
     <button
       {...props}
-      className={`font-medium py-3 px-6 w-${width} rounded-xl transition ${colorStyles[color]}`}
+      className={`font-medium py-3 px-6 w-${width} rounded-xl transition ${colorStyles[color]} ${customStyles}`}
     >
       {children}
     </button>

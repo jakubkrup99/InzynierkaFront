@@ -30,7 +30,7 @@ function ImagesPage() {
     return () => clearTimeout(timeout);
   }, [searchPhrase]);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["images", currentPage, pageSize, debouncedSearchPhrase],
     queryFn: () =>
       GetImages({
