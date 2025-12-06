@@ -4,6 +4,7 @@ import Button from "./Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
+import { logout } from "../client/authorization";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ function Navbar() {
   const { searchPhrase, setSearchPhrase } = useSearchPhrase();
   const isImagesPage = location.pathname === "/images";
 
-  function logout() {
-    localStorage.removeItem("token");
+  async function handleLogout() {
+    await logout();
     navigate("/");
   }
 
@@ -61,7 +62,7 @@ function Navbar() {
       )}
 
       <div className="hidden md:flex">
-        <Button color="darkBlue" width={32} onClick={logout}>
+        <Button color="darkBlue" width={32} onClick={handleLogout}>
           Log out
         </Button>
       </div>

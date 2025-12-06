@@ -7,7 +7,7 @@ import ValidationError from "../components/ValidationError";
 import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
-import { loginUser, saveTokens } from "../client/authorization";
+import { loginUser } from "../client/authorization";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +23,7 @@ function LoginPage() {
       email: formData.get("email")!.toString(),
       password: formData.get("password")!.toString(),
     };
-    const response = await mutation.mutateAsync(loginData);
-    saveTokens(response.accessToken, response.refreshToken);
+    await mutation.mutateAsync(loginData);
     navigate("/main");
   }
   return (

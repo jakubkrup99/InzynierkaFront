@@ -5,7 +5,6 @@ import Button from "../components/Buttons/Button";
 function HomePage() {
   return (
     <div className="text-center -translate-y-3">
-      {/* <img src={logo} alt="Logo" className="w-20 h-20 mx-auto mb-6" /> */}
       <h1 className="md:text-6xl text-4xl font-semibold">PhotoScribe</h1>
       <p className=" md:text-xl text-lg text-gray-600 dark:text-gray-400 mt-2 mb-8">
         Describe your photos with AI

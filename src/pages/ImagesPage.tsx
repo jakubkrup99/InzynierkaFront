@@ -4,6 +4,8 @@ import { deleteImage, GetImages } from "../client/images";
 import PaginationFooter from "../components/PaginationFooter";
 import { useEffect, useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
+import { useAuth } from "../context/AuthContext";
+import { setLogoutCallback } from "../client/authorization";
 
 function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,6 +14,12 @@ function ImagesPage() {
   const [debouncedSearchPhrase, setDebouncedSearchPhrase] =
     useState(searchPhrase);
   const queryClient = useQueryClient();
+
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    setLogoutCallback(logout);
+  }, [logout]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -56,7 +64,7 @@ function ImagesPage() {
     return <div>Loading...</div>;
   }
   if (isError || data === null) {
-    return <div>Loading images failed - {error?.message}</div>;
+    return <div>Loading images failed</div>;
   }
   function handlePageChange(page: number) {
     setCurrentPage(page);

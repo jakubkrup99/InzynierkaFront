@@ -70,7 +70,6 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
     const error = new Error(errorMessage);
     throw error;
   }
-  console.log("Fetched images :/");
   return data;
 }
 
