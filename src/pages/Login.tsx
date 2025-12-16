@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
 import { loginUser } from "../client/authorization";
 import { FcGoogle } from "react-icons/fc";
+import GoogleButton from "../components/Buttons/GoogleButton";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -27,10 +28,7 @@ function LoginPage() {
     await mutation.mutateAsync(loginData);
     navigate("/main");
   }
-  function handleGoogleLogin() {
-    window.location.href =
-      "https://localhost:7033/api/authorization/google?returnUrl=http://localhost:5173";
-  }
+
   return (
     <div className="w-full min-h-screen flex mx-2">
       <div className="hidden md:flex md:w-1/3 items-center justify-end bg-gray-100 dark:bg-midnight p-8">
@@ -69,18 +67,7 @@ function LoginPage() {
               </Button>
             </div>
           </form>
-          <div className="flex justify-end">
-            <Button
-              onClick={handleGoogleLogin}
-              width={64}
-              customStyles={
-                "max-w-3xl flex items-center justify-between text-l"
-              }
-            >
-              <FcGoogle size={24} className="mr-2" />
-              Login with google
-            </Button>
-          </div>
+          <GoogleButton buttonContent="Login with google" />
         </div>
       </div>
     </div>
