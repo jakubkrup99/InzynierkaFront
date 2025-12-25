@@ -2,7 +2,7 @@ import type CreateImageRequest from "../types/API/CreateImageRequest";
 import type GetImagesRequest from "../types/API/GetImagesRequest";
 import { apiFetch } from "./authorization";
 
-const apiUrl = "https://localhost:7033/api";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function addImage(createImage: CreateImageRequest) {
   const formData = new FormData();

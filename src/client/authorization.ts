@@ -1,8 +1,7 @@
 import type LoginRequest from "../types/API/LoginRequest";
 import type RegisterRequest from "../types/API/RegisterRequest";
 
-// const apiUrl = import.meta.env.API_URL;
-const apiUrl = "https://localhost:7033/api";
+const apiUrl = import.meta.env.VITE_API_URL;
 let logoutCallback: (() => void) | null = null;
 export const setLogoutCallback = (cb: () => void) => {
   logoutCallback = cb;
