@@ -4,10 +4,11 @@ import Button from "./Button";
 interface GoogleButtonProps {
   buttonContent: string;
 }
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function GoogleButton({ buttonContent }: GoogleButtonProps) {
   function handleGoogleLogin() {
-    window.location.href =
-      "https://localhost:7033/api/authorization/google?returnUrl=http://localhost:5173";
+    window.location.href = `${apiUrl}/api/authorization/google?returnUrl=https://inzynierka-front-two.vercel.app`;
   }
   return (
     <div className="flex justify-end">

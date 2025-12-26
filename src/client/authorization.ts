@@ -9,7 +9,7 @@ export const setLogoutCallback = (cb: () => void) => {
 
 export async function registerUser(registerData: RegisterRequest) {
   console.log(apiUrl, "apiurl");
-  const response = await fetch(`${apiUrl}/authorization/register`, {
+  const response = await fetch(`${apiUrl}/api/authorization/register`, {
     method: "POST",
     body: JSON.stringify(registerData),
     credentials: "include",
@@ -27,7 +27,7 @@ export async function registerUser(registerData: RegisterRequest) {
 }
 
 export async function loginUser(loginData: LoginRequest) {
-  const response = await fetch(`${apiUrl}/authorization/login`, {
+  const response = await fetch(`${apiUrl}/api/authorization/login`, {
     method: "POST",
     body: JSON.stringify(loginData),
     credentials: "include",
@@ -42,7 +42,7 @@ export async function loginUser(loginData: LoginRequest) {
 
 export async function logout() {
   try {
-    await apiFetch(`${apiUrl}/authorization/logout`, { method: "POST" });
+    await apiFetch(`${apiUrl}/api/authorization/logout`, { method: "POST" });
     console.log("logged out");
   } catch (err) {
     console.log(err);
@@ -50,7 +50,7 @@ export async function logout() {
 }
 
 async function refreshAccessToken() {
-  const res = await fetch(`${apiUrl}/authorization/refresh`, {
+  const res = await fetch(`${apiUrl}/api/authorization/refresh`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
