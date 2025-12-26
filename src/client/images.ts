@@ -11,7 +11,7 @@ export async function addImage(createImage: CreateImageRequest) {
   let response;
 
   try {
-    response = await apiFetch(`${apiUrl}/images`, {
+    response = await apiFetch(`${apiUrl}/api/images`, {
       method: "POST",
       body: formData,
     });
@@ -40,7 +40,7 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
   const { searchPhrase, pageNumber, pageSize, sortBy, sortDirection } =
     GetImagesRequest;
 
-  let url = `${apiUrl}/images?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+  let url = `${apiUrl}/api/images?pageNumber=${pageNumber}&pageSize=${pageSize}`;
   if (searchPhrase) {
     url += `&searchPhrase=${searchPhrase}`;
   }
@@ -76,7 +76,7 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
 export async function deleteImage(imageId: string) {
   let response;
   try {
-    response = await apiFetch(`${apiUrl}/images/${imageId}`, {
+    response = await apiFetch(`${apiUrl}/api/images/${imageId}`, {
       method: "DELETE",
     });
   } catch {
