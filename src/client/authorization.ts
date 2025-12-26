@@ -8,6 +8,7 @@ export const setLogoutCallback = (cb: () => void) => {
 };
 
 export async function registerUser(registerData: RegisterRequest) {
+  console.log(apiUrl, "apiurl");
   const response = await fetch(`${apiUrl}/authorization/register`, {
     method: "POST",
     body: JSON.stringify(registerData),
