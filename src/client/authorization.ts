@@ -2,6 +2,8 @@ import type LoginRequest from "../types/API/LoginRequest";
 import type RegisterRequest from "../types/API/RegisterRequest";
 
 const apiUrl = import.meta.env.VITE_API_URL;
+console.log("All env vars:", import.meta.env);
+console.log("API URL:", import.meta.env.VITE_API_URL);
 let logoutCallback: (() => void) | null = null;
 export const setLogoutCallback = (cb: () => void) => {
   logoutCallback = cb;
