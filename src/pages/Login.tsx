@@ -8,7 +8,6 @@ import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
 import { loginUser } from "../client/authorization";
-import { FcGoogle } from "react-icons/fc";
 import GoogleButton from "../components/Buttons/GoogleButton";
 
 function LoginPage() {
