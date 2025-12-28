@@ -9,7 +9,6 @@ import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../client/authorization";
 import type RegisterRequest from "../types/API/RegisterRequest";
 import toast from "react-hot-toast";
-import GoogleButton from "../components/Buttons/GoogleButton";
 
 function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +96,7 @@ function RegisterPage() {
               </Button>
             </div>
           </form>
-          <GoogleButton buttonContent="Register with google" />
+          {/* <GoogleButton buttonContent="Register with google" /> */}
         </div>
       </div>
     </div>

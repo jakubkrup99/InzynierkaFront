@@ -8,7 +8,6 @@ import Input from "../components/Input";
 import { useMutation } from "@tanstack/react-query";
 import type LoginRequest from "../types/API/LoginRequest";
 import { loginUser } from "../client/authorization";
-import GoogleButton from "../components/Buttons/GoogleButton";
 
 function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +65,7 @@ function LoginPage() {
               </Button>
             </div>
           </form>
-          <GoogleButton buttonContent="Login with google" />
+          {/* <GoogleButton buttonContent="Login with google" /> */}
         </div>
       </div>
     </div>
