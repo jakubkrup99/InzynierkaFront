@@ -1,6 +1,6 @@
-import type ApiError from "../types/API/APIError";
 import type LoginRequest from "../types/API/LoginRequest";
 import type RegisterRequest from "../types/API/RegisterRequest";
+import type ApiError from "../types/API/ApiError";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 console.log("All env vars:", import.meta.env);
