@@ -112,6 +112,7 @@ export default function ImageForm() {
                 isRegenerating={updateMutation.isPending}
                 imageId={imageState.imageId}
                 onUpdate={updateMutation.mutate}
+                displayRegenerate={true}
               />
             )}
           </div>

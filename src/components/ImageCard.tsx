@@ -42,6 +42,7 @@ function ImageCard({
         isRegenerating={isRegeneratePending}
         imageId={imageId}
         onUpdate={onUpdate}
+        displayRegenerate={false}
       />
       <ImageCardButtons
         onDelete={onDelete}
