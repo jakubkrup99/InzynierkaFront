@@ -91,3 +91,28 @@ export async function deleteImage(imageId: string) {
     throw error;
   }
 }
+export async function updateImage(imageId: string) {
+  let response;
+  try {
+    response = await apiFetch(`${apiUrl}/api/images/${imageId}`, {
+      method: "PUT",
+    });
+  } catch {
+    throw new Error("Error while updating image");
+  }
+  if (!response.ok) {
+    const data = await response.json();
+    const errorMessage = data.errors
+      ? (Object.values(data.errors)[0] as string[])[0]
+      : "Generating caption failed";
+    const error = new Error(errorMessage);
+    throw error;
+  }
+  let data;
+  try {
+    data = await response.json();
+  } catch (err) {
+    throw new Error("Failed to parse server response");
+  }
+  return data;
+}

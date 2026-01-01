@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ImageCard from "../components/ImageCard";
-import { deleteImage, GetImages } from "../client/images";
+import { deleteImage, GetImages, updateImage } from "../client/images";
 import PaginationFooter from "../components/PaginationFooter";
 import { useEffect, useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
 import { useAuth } from "../context/AuthContext";
 import { setLogoutCallback } from "../client/authorization";
+import type GetImagesResponse from "../types/API/GetImagesResponse";
+import type UpdateImageResponse from "../types/API/UpdateImageResponse";
 
 function ImagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,6 +62,36 @@ function ImagesPage() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: (imageId: string) => updateImage(imageId),
+    onSuccess: (response: UpdateImageResponse, imageId) => {
+      queryClient.setQueryData(
+        ["images", currentPage, pageSize, debouncedSearchPhrase],
+        (old: any) => {
+          if (!old) return old;
+          return {
+            ...old,
+            items: old.items.map((image: GetImagesResponse) => {
+              if (image.publicId !== imageId) {
+                return image;
+              }
+              return {
+                ...image,
+                azureDescription: response.azureDescription,
+                trainedModelDescription: response.modelDescription,
+                isAzureCaptionError: response.isAzureError,
+                isModelCaptionError: response.isModelError,
+              };
+            }),
+          };
+        }
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["images", currentPage, pageSize, debouncedSearchPhrase],
+      });
+    },
+  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -78,7 +110,7 @@ function ImagesPage() {
     <div className="w-full min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-32 p-4 min-h-screen">
         {data.items.length > 0 ? (
-          data.items.map((image: any) => (
+          data.items.map((image: GetImagesResponse) => (
             <ImageCard
               key={image.publicId}
               azureDescription={image.azureDescription}
@@ -87,6 +119,10 @@ function ImagesPage() {
               onDelete={deleteMutation.mutate}
               imageUrl={image.url}
               title={image.title}
+              isAzureCaptionError={image.isAzureCaptionError}
+              isModelCaptionError={image.isModelCaptionError}
+              onUpdate={updateMutation.mutate}
+              isRegeneratePending={updateMutation.isPending}
             />
           ))
         ) : (

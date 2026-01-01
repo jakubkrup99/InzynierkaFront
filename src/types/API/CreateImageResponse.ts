@@ -1,3 +1,8 @@
 export default interface CreateImageResponse {
-  descriptions: string;
+  azureDescription: string;
+  modelDescription: string;
+  isAzureCaptionError: boolean;
+  isModelCaptionError: boolean;
+  publicId: string;
+  imageUrl: string;
 }

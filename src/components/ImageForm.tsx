@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import type CreateImageRequest from "../types/API/CreateImageRequest";
-import { addImage } from "../client/images";
+import { addImage, updateImage } from "../client/images";
 import { validateFile } from "../Utils/validationUtil";
 import toast from "react-hot-toast";
 import RoundDeleteButton from "./Buttons/RoundDeleteButton";
@@ -12,21 +12,46 @@ import { CaptionGeneratorForm } from "./CaptionGeneratorForm";
 import { ErrorMessage } from "./ErrorMessage";
 import useDragAndDrop from "../hooks/useDragAndDrop";
 import useImageUpload from "../hooks/useImageUpload";
+import type CreateImageResponse from "../types/API/CreateImageResponse";
+import type UpdateImageResponse from "../types/API/UpdateImageResponse";
 
 export default function ImageForm() {
   const [error, setError] = useState<string | null>(null);
   const { imageState, setImage, setTitle, setCaptions, resetImage } =
     useImageUpload();
 
-  const mutation = useMutation({
+  const addImageMutation = useMutation({
     mutationFn: (image: CreateImageRequest) => addImage(image),
     onError: () => {
       toast.error("Image upload failed.");
     },
-    onSuccess: (res: any) => {
+    onSuccess: (res: CreateImageResponse) => {
       toast.success("Your image has been added.");
       setError(null);
-      setCaptions(res.azureDescription, res.modelDescription);
+      setCaptions(
+        res.azureDescription,
+        res.modelDescription,
+        res.isAzureCaptionError,
+        res.isModelCaptionError,
+        res.publicId
+      );
+    },
+  });
+  const updateMutation = useMutation({
+    mutationFn: (imageId: string) => updateImage(imageId),
+    onError: () => {
+      toast.error("Image upload failed.");
+    },
+    onSuccess: (res: UpdateImageResponse) => {
+      toast.success("Your image has been updated.");
+      setError(null);
+      setCaptions(
+        res.azureDescription,
+        res.modelDescription,
+        res.isAzureError,
+        res.isModelError,
+        res.imageId
+      );
     },
   });
 
@@ -50,7 +75,7 @@ export default function ImageForm() {
     }
 
     setError(null);
-    await mutation.mutateAsync({
+    await addImageMutation.mutateAsync({
       file: imageState.file!,
       title: imageState.title,
     });
@@ -75,13 +100,18 @@ export default function ImageForm() {
                 title={imageState.title}
                 onTitleChange={setTitle}
                 onGenerate={handleGenerateCaption}
-                isGenerating={mutation.isPending}
+                isGenerating={addImageMutation.isPending}
               />
             ) : (
               <ImageDescription
                 title={imageState.title}
                 azureDescription={imageState.azureCaption}
                 trainedModelDescription={imageState.modelCaption}
+                isAzureCaptionError={imageState.isAzureCaptionError}
+                isModelCaptionError={imageState.isModelCaptionError}
+                isRegenerating={updateMutation.isPending}
+                imageId={imageState.imageId}
+                onUpdate={updateMutation.mutate}
               />
             )}
           </div>

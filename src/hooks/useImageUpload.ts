@@ -8,6 +8,9 @@ interface ImageState {
   url: string;
   title: string;
   file: File | null;
+  isAzureCaptionError: boolean;
+  isModelCaptionError: boolean;
+  imageId: string;
 }
 
 const initialImageState: ImageState = {
@@ -18,6 +21,9 @@ const initialImageState: ImageState = {
   url: "",
   title: "",
   file: null,
+  isAzureCaptionError: false,
+  isModelCaptionError: false,
+  imageId: "",
 };
 
 export default function useImageUpload() {
@@ -36,12 +42,27 @@ export default function useImageUpload() {
     setImageState({ ...imageState, title });
   };
 
-  const setCaptions = (azureCaption: string, modelCaption: string) => {
+  const setCaptions = (
+    azureCaption: string,
+    modelCaption: string,
+    isAzureCaptionError: boolean,
+    isModelCaptionError: boolean,
+    imageId: string
+  ) => {
+    if (isAzureCaptionError) {
+      azureCaption = "Failed to generate description by azure service.";
+    }
+    if (isModelCaptionError) {
+      modelCaption = "Failed to generate description by trained model.";
+    }
     setImageState({
       ...imageState,
       isCaption: true,
       azureCaption,
       modelCaption,
+      isAzureCaptionError,
+      isModelCaptionError,
+      imageId,
     });
   };
 
