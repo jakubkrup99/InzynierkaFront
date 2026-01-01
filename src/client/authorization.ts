@@ -30,38 +30,27 @@ export async function registerUser(registerData: RegisterRequest) {
 }
 
 export async function loginUser(loginData: LoginRequest) {
+  const response = await fetch(`${apiUrl}/api/authorization/login`, {
+    method: "POST",
+    body: JSON.stringify(loginData),
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  let data: any = null;
+
   try {
-    const response = await fetch(`${apiUrl}/api/authorization/login`, {
-      method: "POST",
-      body: JSON.stringify(loginData),
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
+    data = await response.json();
+  } catch {}
 
-    let data: any = null;
-
-    try {
-      data = await response.json();
-    } catch {}
-
-    if (!response.ok) {
-      const error: ApiError = {
-        code: response.status,
-        message: data?.message || "Unexpected server error",
-      };
-      throw error;
-    }
-
-    return data;
-  } catch (err: any) {
-    if (err?.status) throw err;
-
-    const networkError: ApiError = {
-      code: 0,
-      message: "Network error. Please check your connection.",
+  if (!response.ok) {
+    throw {
+      code: response.status,
+      message: data?.message || "Unexpected server error",
     };
-    throw networkError;
   }
+
+  return data;
 }
 
 export async function logout() {
