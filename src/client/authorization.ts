@@ -1,3 +1,4 @@
+import type ApiError from "../types/API/APIError";
 import type LoginRequest from "../types/API/LoginRequest";
 import type RegisterRequest from "../types/API/RegisterRequest";
 
@@ -29,16 +30,37 @@ export async function registerUser(registerData: RegisterRequest) {
 }
 
 export async function loginUser(loginData: LoginRequest) {
-  const response = await fetch(`${apiUrl}/api/authorization/login`, {
-    method: "POST",
-    body: JSON.stringify(loginData),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Login failed");
+  try {
+    const response = await fetch(`${apiUrl}/api/authorization/login`, {
+      method: "POST",
+      body: JSON.stringify(loginData),
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    let data: any = null;
+
+    try {
+      data = await response.json();
+    } catch {}
+
+    if (!response.ok) {
+      const error: ApiError = {
+        code: response.status,
+        message: data?.message || "Unexpected server error",
+      };
+      throw error;
+    }
+
+    return data;
+  } catch (err: any) {
+    if (err?.status) throw err;
+
+    const networkError: ApiError = {
+      code: 0,
+      message: "Network error. Please check your connection.",
+    };
+    throw networkError;
   }
 }
 
