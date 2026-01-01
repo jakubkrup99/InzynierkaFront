@@ -17,9 +17,6 @@ function ImageDescription({
   trainedModelDescription,
   isAzureCaptionError,
   isModelCaptionError,
-  isRegenerating,
-  imageId,
-  onUpdate,
 }: ImageDescriptionProps) {
   const azureDescriptionTitle = "Azure description: ";
   const azureError = "Failed to generate description by azure service.";
@@ -44,12 +41,6 @@ function ImageDescription({
         description={trainedModelDescription}
         descriptionTitle={modelDescriptionTitle}
       />
-      <button
-        onClick={() => onUpdate(imageId)}
-        className="flex mt-4 items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors duration-200"
-      >
-        {isRegenerating ? "Generating..." : "Regenerate"}
-      </button>
     </div>
   );
 }
