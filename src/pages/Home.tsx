@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-// import logo from "../../public/PhotoScribe-logo-transparent.png";
 import Button from "../components/Buttons/Button";
 
 function HomePage() {

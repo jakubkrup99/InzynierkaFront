@@ -33,7 +33,7 @@ function LoginPage() {
         <div className="text-right">
           <h1 className="text-6xl font-bold text-blue-500 mb-4">Sign in</h1>
           <p className="text-black dark:text-gray-300 text-lg">
-            Enter your username and password
+            Enter your email and password
           </p>
         </div>
       </div>

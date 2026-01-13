@@ -9,10 +9,14 @@ import { setLogoutCallback } from "../client/authorization";
 import type GetImagesResponse from "../types/API/GetImagesResponse";
 import type UpdateImageResponse from "../types/API/UpdateImageResponse";
 
+const DEFAULT_PAGE_SIZE = 5;
+const START_PAGE_NUMBER = 1;
+
 function ImagesPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(START_PAGE_NUMBER);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const { searchPhrase } = useSearchPhrase();
+  const [updatingImageId, setUpdatingImageId] = useState<string | null>(null);
   const [debouncedSearchPhrase, setDebouncedSearchPhrase] =
     useState(searchPhrase);
   const queryClient = useQueryClient();
@@ -64,6 +68,12 @@ function ImagesPage() {
 
   const updateMutation = useMutation({
     mutationFn: (imageId: string) => updateImage(imageId),
+    onMutate: (imageId: string) => {
+      setUpdatingImageId(imageId);
+    },
+    onSettled: () => {
+      setUpdatingImageId(null);
+    },
     onSuccess: (response: UpdateImageResponse, imageId) => {
       queryClient.setQueryData(
         ["images", currentPage, pageSize, debouncedSearchPhrase],
@@ -122,7 +132,7 @@ function ImagesPage() {
               isAzureCaptionError={image.isAzureCaptionError}
               isModelCaptionError={image.isModelCaptionError}
               onUpdate={updateMutation.mutate}
-              isRegeneratePending={updateMutation.isPending}
+              isRegeneratePending={updatingImageId === image.publicId}
             />
           ))
         ) : (
