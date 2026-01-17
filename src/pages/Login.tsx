@@ -68,7 +68,6 @@ function LoginPage() {
               </Button>
             </div>
           </form>
-          {/* <GoogleButton buttonContent="Login with google" /> */}
         </div>
       </div>
     </div>

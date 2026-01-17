@@ -38,6 +38,7 @@ function ImagesPage() {
         pageNumber: currentPage,
         pageSize: pageSize,
         searchPhrase: debouncedSearchPhrase,
+        sortBy: "Title",
       }),
   });
 
