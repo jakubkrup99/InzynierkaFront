@@ -4,10 +4,10 @@ import { deleteImage, GetImages, updateImage } from "../client/images";
 import PaginationFooter from "../components/PaginationFooter";
 import { useEffect, useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
-import { useAuth } from "../context/AuthContext";
-import { setLogoutCallback } from "../client/authorization";
 import type GetImagesResponse from "../types/API/GetImagesResponse";
 import type UpdateImageResponse from "../types/API/UpdateImageResponse";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const DEFAULT_PAGE_SIZE = 5;
 const START_PAGE_NUMBER = 1;
@@ -20,12 +20,7 @@ function ImagesPage() {
   const [debouncedSearchPhrase, setDebouncedSearchPhrase] =
     useState(searchPhrase);
   const queryClient = useQueryClient();
-
-  const { logout } = useAuth();
-
-  useEffect(() => {
-    setLogoutCallback(logout);
-  }, [logout]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -58,11 +53,18 @@ function ImagesPage() {
             items: old.items.filter((x: any) => x.publicId !== deletedId),
             totalItemsCount: old.totalItemsCount - 1,
           };
-        }
+        },
       );
       queryClient.invalidateQueries({
         queryKey: ["images", currentPage, pageSize, debouncedSearchPhrase],
       });
+    },
+    onError: (err) => {
+      if (err.message.toUpperCase() === "UNAUTHORIZED") {
+        toast.error("Your token has expired!");
+        navigate("/login");
+        return;
+      }
     },
   });
 
@@ -94,11 +96,18 @@ function ImagesPage() {
               };
             }),
           };
-        }
+        },
       );
       queryClient.invalidateQueries({
         queryKey: ["images", currentPage, pageSize, debouncedSearchPhrase],
       });
+    },
+    onError: (err) => {
+      if (err.message.toUpperCase() === "UNAUTHORIZED") {
+        toast.error("Your token has expired!");
+        navigate("/login");
+        return;
+      }
     },
   });
 

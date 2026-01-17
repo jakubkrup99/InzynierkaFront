@@ -14,6 +14,9 @@ function LoginPage() {
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (registerData: LoginRequest) => loginUser(registerData),
+    onSuccess: (token: string) => {
+      localStorage.setItem("token", token);
+    },
     onError: (err: any) => setError(err.message),
   });
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

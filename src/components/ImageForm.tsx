@@ -14,15 +14,22 @@ import useDragAndDrop from "../hooks/useDragAndDrop";
 import useImageUpload from "../hooks/useImageUpload";
 import type CreateImageResponse from "../types/API/CreateImageResponse";
 import type UpdateImageResponse from "../types/API/UpdateImageResponse";
+import { useNavigate } from "react-router-dom";
 
 export default function ImageForm() {
   const [error, setError] = useState<string | null>(null);
   const { imageState, setImage, setTitle, setCaptions, resetImage } =
     useImageUpload();
+  const navigate = useNavigate();
 
   const addImageMutation = useMutation({
     mutationFn: (image: CreateImageRequest) => addImage(image),
-    onError: () => {
+    onError: (err) => {
+      if (err.message.toUpperCase() == "UNAUTHORIZED") {
+        toast.error("Your token has expired!");
+        navigate("/login");
+        return;
+      }
       toast.error("Image upload failed.");
     },
     onSuccess: (res: CreateImageResponse) => {
@@ -33,13 +40,18 @@ export default function ImageForm() {
         res.modelDescription,
         res.isAzureCaptionError,
         res.isModelCaptionError,
-        res.publicId
+        res.publicId,
       );
     },
   });
   const updateMutation = useMutation({
     mutationFn: (imageId: string) => updateImage(imageId),
-    onError: () => {
+    onError: (err) => {
+      if (err.message.toUpperCase() === "UNAUTHORIZED") {
+        toast.error("Your token has expired!");
+        navigate("/login");
+        return;
+      }
       toast.error("Image upload failed.");
     },
     onSuccess: (res: UpdateImageResponse) => {
@@ -50,7 +62,7 @@ export default function ImageForm() {
         res.modelDescription,
         res.isAzureError,
         res.isModelError,
-        res.imageId
+        res.imageId,
       );
     },
   });

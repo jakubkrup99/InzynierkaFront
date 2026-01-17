@@ -1,6 +1,5 @@
 import type CreateImageRequest from "../types/API/CreateImageRequest";
 import type GetImagesRequest from "../types/API/GetImagesRequest";
-import { apiFetch } from "./authorization";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -8,39 +7,14 @@ export async function addImage(createImage: CreateImageRequest) {
   const formData = new FormData();
   formData.append("File", createImage.file);
   formData.append("Title", createImage.title);
-  let response;
-
-  try {
-    response = await apiFetch(`${apiUrl}/api/images`, {
-      method: "POST",
-      body: formData,
-    });
-  } catch (err) {
-    throw new Error("Error while sending new image");
-  }
-  let data;
-  try {
-    data = await response.json();
-  } catch {
-    throw new Error("Error while parsing response from addImage");
-  }
-
-  if (!response.ok) {
-    const errorMessage = data.errors
-      ? (Object.values(data.errors)[0] as string[])[0]
-      : "Generating caption failed";
-    const error = new Error(errorMessage);
-    throw error;
-  }
-
-  return data;
+  return fetchWithJwt("/api/images", { method: "POST", body: formData });
 }
 
 export async function GetImages(GetImagesRequest: GetImagesRequest) {
   const { searchPhrase, pageNumber, pageSize, sortBy, sortDirection } =
     GetImagesRequest;
 
-  let url = `${apiUrl}/api/images?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+  let url = `/api/images?pageNumber=${pageNumber}&pageSize=${pageSize}`;
   if (searchPhrase) {
     url += `&searchPhrase=${searchPhrase}`;
   }
@@ -50,69 +24,39 @@ export async function GetImages(GetImagesRequest: GetImagesRequest) {
   if (sortDirection) {
     url += `&sortDirection=${sortDirection}`;
   }
-  let response;
-  try {
-    response = await apiFetch(url);
-  } catch (err) {
-    throw new Error("Network error while fetching images");
-  }
-  let data;
-  try {
-    data = await response.json();
-  } catch (err) {
-    throw new Error("Failed to parse server response");
-  }
-
-  if (!response.ok) {
-    const errorMessage = data.errors
-      ? (Object.values(data.errors)[0] as string[])[0]
-      : "Fetching images failed";
-    const error = new Error(errorMessage);
-    throw error;
-  }
-  return data;
+  return fetchWithJwt(url);
 }
 
 export async function deleteImage(imageId: string) {
-  let response;
-  try {
-    response = await apiFetch(`${apiUrl}/api/images/${imageId}`, {
-      method: "DELETE",
-    });
-  } catch {
-    throw new Error("Error while deleting image");
-  }
-  if (!response.ok) {
-    const data = await response.json();
-    const errorMessage = data.errors
-      ? (Object.values(data.errors)[0] as string[])[0]
-      : "Generating caption failed";
-    const error = new Error(errorMessage);
-    throw error;
-  }
+  return fetchWithJwt(`/api/images/${imageId}`, { method: "DELETE" });
 }
+
 export async function updateImage(imageId: string) {
-  let response;
-  try {
-    response = await apiFetch(`${apiUrl}/api/images/${imageId}`, {
-      method: "PUT",
-    });
-  } catch {
-    throw new Error("Error while updating image");
+  return fetchWithJwt(`/api/images/${imageId}`, { method: "PUT" });
+}
+
+async function fetchWithJwt(input: string, init?: RequestInit) {
+  const token = localStorage.getItem("token");
+  const headers = new Headers(init?.headers);
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
   }
-  if (!response.ok) {
-    const data = await response.json();
-    const errorMessage = data.errors
-      ? (Object.values(data.errors)[0] as string[])[0]
-      : "Generating caption failed";
-    const error = new Error(errorMessage);
-    throw error;
+  const response = await fetch(`${apiUrl}${input}`, { ...init, headers });
+  if (response.status === 401) {
+    throw new Error("Unauthorized");
   }
-  let data;
-  try {
+  let data: any = null;
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
     data = await response.json();
-  } catch (err) {
-    throw new Error("Failed to parse server response");
   }
+
+  if (!response.ok) {
+    const errorMessage = data?.errors
+      ? (Object.values(data.errors)[0] as string[])[0]
+      : "Request failed";
+    throw new Error(errorMessage);
+  }
+
   return data;
 }

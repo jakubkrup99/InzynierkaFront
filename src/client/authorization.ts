@@ -2,15 +2,8 @@ import type LoginRequest from "../types/API/LoginRequest";
 import type RegisterRequest from "../types/API/RegisterRequest";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-console.log("All env vars:", import.meta.env);
-console.log("API URL:", import.meta.env.VITE_API_URL);
-let logoutCallback: (() => void) | null = null;
-export const setLogoutCallback = (cb: () => void) => {
-  logoutCallback = cb;
-};
 
 export async function registerUser(registerData: RegisterRequest) {
-  console.log(apiUrl, "apiurl");
   const response = await fetch(`${apiUrl}/api/authorization/register`, {
     method: "POST",
     body: JSON.stringify(registerData),
@@ -50,45 +43,4 @@ export async function loginUser(loginData: LoginRequest) {
   }
 
   return data;
-}
-
-export async function logout() {
-  try {
-    await apiFetch(`${apiUrl}/api/authorization/logout`, { method: "POST" });
-    console.log("logged out");
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function refreshAccessToken() {
-  const res = await fetch(`${apiUrl}/api/authorization/refresh`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (!res.ok) {
-    throw new Error("Refresh token invalid or expired");
-  }
-}
-
-export async function apiFetch(input: RequestInfo, init?: RequestInit) {
-  let response = await fetch(input, {
-    ...init,
-    credentials: "include",
-    headers: {
-      ...(init?.headers || {}),
-    },
-  });
-
-  if (response.status !== 401) return response;
-
-  try {
-    await refreshAccessToken();
-  } catch (err) {
-    logoutCallback?.();
-  }
-
-  return response;
 }

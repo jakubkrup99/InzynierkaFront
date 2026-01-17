@@ -4,7 +4,6 @@ import Button from "./Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSearchPhrase } from "../context/SearchContext";
-import { logout } from "../client/authorization";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Navbar() {
   const isImagesPage = location.pathname === "/images";
 
   async function handleLogout() {
-    await logout();
+    localStorage.removeItem("token");
     navigate("/");
   }
 
@@ -87,7 +86,7 @@ function Navbar() {
             </Button>
           )}
 
-          <Button color="darkBlue" width={96} onClick={logout}>
+          <Button color="darkBlue" width={96} onClick={handleLogout}>
             Log out
           </Button>
         </div>
