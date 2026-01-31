@@ -15,9 +15,15 @@ function RegisterPage() {
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (registerData: RegisterRequest) => registerUser(registerData),
-    onError: (err: any) => {
+    onError: (err: Error & { errors?: Record<string, string[]> }) => {
       toast.error("Account creation failed.");
-      setError(err.message);
+      const errors = err?.errors;
+      if (errors) {
+        const firstError = Object.values(errors)[0]?.[0];
+        setError(firstError);
+      } else {
+        setError(err.message);
+      }
     },
     onSuccess: () => {
       toast.success("Your account has been created.");

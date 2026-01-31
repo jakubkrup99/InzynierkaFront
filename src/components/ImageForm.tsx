@@ -49,6 +49,7 @@ export default function ImageForm() {
     onError: (err) => {
       if (err.message.toUpperCase() === "UNAUTHORIZED") {
         toast.error("Your token has expired!");
+        localStorage.removeItem("token");
         navigate("/login");
         return;
       }
