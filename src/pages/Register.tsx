@@ -49,6 +49,10 @@ function RegisterPage() {
       return;
     }
 
+    if (!registerData.password || registerData.password.toString().length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
     mutation.mutate({
       email: registerData.email!.toString(),
       password: registerData.password!.toString(),

@@ -16,6 +16,12 @@ function validateEmail(email: string | undefined): ValidationResult {
   };
 }
 
+function validatePassword(password: string) {
+  if (password.length < 6) {
+    return `The length of 'Password' must be at least 6 characters. You entered ${password.length} characters.`;
+  }
+}
+
 function validateFile(file: File) {
   const validTypes = [
     "image/jpeg",
@@ -37,4 +43,4 @@ function validateFile(file: File) {
   return null;
 }
 
-export { validateEmail, validateFile };
+export { validateEmail, validateFile, validatePassword };
